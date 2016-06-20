@@ -1,5 +1,6 @@
 package com.facticoapp.nuup;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -30,10 +31,13 @@ public class MainActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
 
-        /*Intent service = new Intent(getApplicationContext(), PanicButtonService.class);
-        startService(service);
+        //Intent service = new Intent(getApplicationContext(), PanicButtonService.class);
+        //startService(service);
 
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);*/
+        Intent intent = new Intent(getApplicationContext(), DeviceScanActivity.class);
+        startActivity(intent);
+
+        //setVolumeControlStream(AudioManager.STREAM_MUSIC);*/
     }
 
     @Override
