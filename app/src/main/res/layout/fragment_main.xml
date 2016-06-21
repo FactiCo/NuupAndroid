@@ -4,9 +4,45 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite">
 
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/main.companion.1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp">
+
+        <EditText
+            android:id="@+id/main.friend.1.input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_companion_1"
+            android:inputType="phone" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/main.companion.2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main.companion.1"
+        android:layout_margin="15dp">
+
+        <EditText
+            android:id="@+id/main.companion.2.input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_companion_2"
+            android:inputType="phone" />
+    </android.support.design.widget.TextInputLayout>
+
     <Button
         android:id="@+id/main.scan_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_scan" />
+        android:layout_below="@+id/main.companion.2"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/selector_btn"
+        android:text="@string/button_save_numbers"
+        android:textColor="@color/colorWhite" />
 </RelativeLayout>

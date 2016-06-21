@@ -25,10 +25,14 @@ import android.widget.Toast;
 import com.facticoapp.nuup.dialogues.Dialogues;
 import com.facticoapp.nuup.fragments.MainFragment;
 import com.facticoapp.nuup.gcm.RegistrationIntentService;
+import com.facticoapp.nuup.models.Report;
+import com.facticoapp.nuup.models.ReportAzure;
 import com.facticoapp.nuup.preferences.PreferencesManager;
+import com.facticoapp.nuup.services.ConnectionsIntentService;
 import com.facticoapp.nuup.services.LocationService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getName();
@@ -137,9 +141,29 @@ public class MainActivity extends AppCompatActivity {
         // 24 - KEYCODE_VOLUME_UP
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
             Dialogues.Log(TAG, "KeyCode: " + keyCode, Log.DEBUG);
+            Dialogues.Toast(getApplicationContext(), "¡Botón de pánico activado!. Una alerta se enviará a los usuarios cercanos", Toast.LENGTH_LONG);
+
+            startPanicButton();
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void startPanicButton() {
+        long deviceId = PreferencesManager.getLong(getApplication(), PreferencesManager.DEVICE_ID);
+        Dialogues.Log(TAG, String.valueOf(deviceId), Log.ERROR);
+        if (deviceId != -1) {
+            LatLng location = PreferencesManager.getLocationPreference(getApplication());
+            Report report = new Report(deviceId, location);
+            ConnectionsIntentService.startActionAddNewReport(getApplicationContext(), report);
+        }
+
+        String token = PreferencesManager.getString(getApplication(), PreferencesManager.TOKEN);
+        Dialogues.Log(TAG, "Token: " + token, Log.ERROR);
+        if (token != null) {
+            ReportAzure report = new ReportAzure(token);
+            ConnectionsIntentService.startActionAddNewReportAzure(getApplicationContext(), report);
+        }
     }
 
     @Override

@@ -150,21 +150,6 @@ public class MainFragment extends Fragment implements BluetoothBroadcastReceiver
         @Override
         public void onClick(View v) {
             //DeviceScanActivity.startActivityForResult(MainFragment.this, REQUEST_CONNECT_DEVICE_SECURE);
-
-            long deviceId = PreferencesManager.getLong(getActivity().getApplication(), PreferencesManager.DEVICE_ID);
-            Dialogues.Log(TAG, String.valueOf(deviceId), Log.ERROR);
-            if (deviceId != -1) {
-                LatLng location = PreferencesManager.getLocationPreference(getActivity().getApplication());
-                Report report = new Report(deviceId, location);
-                //ConnectionsIntentService.startActionAddNewReport(getActivity(), report);
-            }
-
-            String token = PreferencesManager.getString(getActivity().getApplication(), PreferencesManager.TOKEN);
-            Dialogues.Log(TAG, "Token: " + token, Log.ERROR);
-            if (token != null) {
-                ReportAzure report = new ReportAzure(token);
-                ConnectionsIntentService.startActionAddNewReportAzure(getActivity(), report);
-            }
         }
     };
 

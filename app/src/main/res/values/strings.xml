@@ -11,6 +11,11 @@
 
     <string name="bt_not_enabled">Bluetooth was not enabled</string>
 
+    <string name="button_save_numbers">Save numbers of friends</string>
+
+    <string name="hint_companion_1">Phone number of friend one</string>
+    <string name="hint_companion_2">Phone number of friend two</string>
+
     <string name="location_permission_request">Location permissions required</string>
 
     <!--<string name="gcm_send_message">Token retrieved and sent to server! You can now use gcmsender to
