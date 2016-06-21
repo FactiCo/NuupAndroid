@@ -4,19 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/device.scan.scan_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_scan"
-        android:visibility="gone" />
-
     <TextView
         android:id="@+id/device.scan.paired_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/device.scan.scan_button"
-        android:background="#666"
+        android:background="@color/bg_list_item"
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
         android:text="@string/title_paired_devices"
@@ -40,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/device.scan.paired_list"
-        android:background="#666"
+        android:background="@color/bg_list_item"
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
         android:text="@string/title_other_devices"

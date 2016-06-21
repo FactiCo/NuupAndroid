@@ -23,6 +23,7 @@ public class HttpConnection {
     private static final String BASE_URL = "http://104.210.150.140/";
 
     public static final String DEVICES = "devices.json";
+    public static final String REPORTS = "reports.json";
 
     public static String GET(String relativeUrl) {
         String result = null;

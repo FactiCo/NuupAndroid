@@ -18,6 +18,8 @@ public class PreferencesManager {
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
 
+    public static final String DEVICE_ID = "device_id";
+
     public static void putLocationPreference(Context context, String latitude, String longitude) {
         SharedPreferences prefs = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
 
@@ -70,7 +72,7 @@ public class PreferencesManager {
 
     public static long getLong(Context context, String key) {
         SharedPreferences prefs = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
-        return prefs.getLong(key, 0);
+        return prefs.getLong(key, -1);
     }
 
     public static void putInt(Context context, String key, long value) {

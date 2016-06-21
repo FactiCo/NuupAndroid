@@ -31,6 +31,10 @@
 
         <service android:name=".services.LocationService" />
 
+        <service
+            android:name=".services.ConnectionsIntentService"
+            android:exported="false" />
+
         <receiver android:name=".receivers.RemoteControlReceiver">
             <intent-filter>
                 <action android:name="com.facticoapp.PANIC_BUTTON" />

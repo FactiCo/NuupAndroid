@@ -6,24 +6,23 @@ import com.google.gson.annotations.Expose;
 import java.io.Serializable;
 
 /**
- * Created by Edgar Z. on 6/20/16.
+ * Created by Edgar Z. on 6/21/16.
  */
 
-public class Device implements Serializable {
+public class Report implements Serializable {
     private long id;
-    @Expose private String provider = "android";
-    @Expose private String token;
+    @Expose private long device_id;
     @Expose private double latitude;
     @Expose private double longitude;
 
-    public Device(String token, double latitude, double longitude) {
-        this.token = token;
+    public Report(long device_id, double latitude, double longitude) {
+        this.device_id = device_id;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public Device(String token, LatLng location) {
-        this.token = token;
+    public Report(long device_id, LatLng location) {
+        this.device_id = device_id;
         this.latitude = location.latitude;
         this.longitude = location.longitude;
     }
@@ -36,20 +35,12 @@ public class Device implements Serializable {
         this.id = id;
     }
 
-    public String getProvider() {
-        return provider;
+    public long getDevice_id() {
+        return device_id;
     }
 
-    public void setProvider(String provider) {
-        this.provider = provider;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
+    public void setDevice_id(long device_id) {
+        this.device_id = device_id;
     }
 
     public double getLatitude() {

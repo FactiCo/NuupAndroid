@@ -36,7 +36,7 @@ public class DeviceScanFragment extends Fragment {
 
     private RecyclerView mPairedDevices;
     private RecyclerView mNewDevices;
-    private Button mScanButton;
+    //private Button mScanButton;
     private TextView mPairedLabel;
     private TextView mNewLabel;
 
@@ -70,7 +70,7 @@ public class DeviceScanFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mPairedDevices = (RecyclerView) view.findViewById(R.id.device_scan_paired_list);
         mNewDevices = (RecyclerView) view.findViewById(R.id.device_scan_new_list);
-        mScanButton = (Button) view.findViewById(R.id.device_scan_scan_button);
+        //mScanButton = (Button) view.findViewById(R.id.device_scan_scan_button);
 
         mPairedLabel = (TextView) view.findViewById(R.id.device_scan_paired_label);
         mNewLabel = (TextView) view.findViewById(R.id.device_scan_new_label);
@@ -89,14 +89,14 @@ public class DeviceScanFragment extends Fragment {
 
         final Activity activity = getActivity();
 
-        mScanButton.setOnClickListener(new View.OnClickListener() {
+        /*mScanButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mScanning = true;
                 doDiscovery();
                 if (activity != null) activity.invalidateOptionsMenu();
                 //v.setVisibility(View.GONE);
             }
-        });
+        });*/
 
         // Find and set up the RecyclerView for paired devices
         LinearLayoutManager mPairedLinearLayoutManager = new LinearLayoutManager(activity);
@@ -205,18 +205,6 @@ public class DeviceScanFragment extends Fragment {
     }
 
     /**
-     * Makes this device discoverable.
-     */
-    private void ensureDiscoverable() {
-        if (mBluetoothAdapter.getScanMode() !=
-                BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-            startActivity(discoverableIntent);
-        }
-    }
-
-    /**
      * The on-click listener for all devices in the RecyclerView
      */
     private DevicesAdapter.OnItemClickListener mPairedDeviceOnClickListener
@@ -260,8 +248,8 @@ public class DeviceScanFragment extends Fragment {
 
         // Create the result Intent and include the MAC address
         Intent intent = new Intent();
-        intent.putExtra(DeviceScanActivity.EXTRA_DEVICE_ADDRESS, address);
         intent.putExtra(DeviceScanActivity.EXTRA_DEVICE_NAME, name);
+        intent.putExtra(DeviceScanActivity.EXTRA_DEVICE_ADDRESS, address);
 
         // Set result and finish this Activity
         activity.setResult(Activity.RESULT_OK, intent);
@@ -284,7 +272,7 @@ public class DeviceScanFragment extends Fragment {
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // If it's already paired, skip it, because it's been listed already
-                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
+                if (device.getBondState() != BluetoothDevice.BOND_BONDED && device.getType() != 2) {
                     mNewDevicesAdapter.addItem(device);
                 }
                 // When discovery is finished, change the Activity title

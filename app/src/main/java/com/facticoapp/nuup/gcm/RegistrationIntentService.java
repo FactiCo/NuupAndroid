@@ -63,9 +63,20 @@ public class RegistrationIntentService extends IntentService {
     private void sendRegistrationToServer(String token) {
         LatLng location = PreferencesManager.getLocationPreference(getApplication());
         Device device = new Device(token, location);
-        String json = GsonParser.createJsonFromObject(device);
+        String json = GsonParser.createJsonFromObjectWithExposeAnnotations(device);
+        Dialogues.Log(TAG, json, Log.ERROR);
         String result = HttpConnection.POST(HttpConnection.DEVICES, json);
         Dialogues.Log(TAG, result, Log.ERROR);
+
+        handleResult(result);
+    }
+
+    private void handleResult(String result) {
+        Device device = (Device) GsonParser.getObjectFromJSON(result, Device.class);
+
+        if (device != null) {
+            PreferencesManager.putLong(getApplication(), PreferencesManager.DEVICE_ID, device.getId());
+        }
     }
 
     /**
