@@ -156,7 +156,7 @@ public class MainFragment extends Fragment implements BluetoothBroadcastReceiver
             if (deviceId != -1) {
                 LatLng location = PreferencesManager.getLocationPreference(getActivity().getApplication());
                 Report report = new Report(deviceId, location);
-                ConnectionsIntentService.startActionAddNewReport(getActivity(), report);
+                //ConnectionsIntentService.startActionAddNewReport(getActivity(), report);
             }
 
             String token = PreferencesManager.getString(getActivity().getApplication(), PreferencesManager.TOKEN);
@@ -169,8 +169,8 @@ public class MainFragment extends Fragment implements BluetoothBroadcastReceiver
     };
 
     public class AddNewReportReceiver extends BroadcastReceiver {
-        public static final String ACTION_ADD_NEW_REPORT = "com.facticoapp.supercivicos.receiver.action.SEND_LIKE_TO_ITEM";
-        public static final String ACTION_ADD_NEW_REPORT_AZURE = "com.facticoapp.supercivicos.receiver.action.SEND_LIKE_TO_ITEM";
+        public static final String ACTION_ADD_NEW_REPORT = "com.facticoapp.nuup.receiver.action.ADD_NEW_REPORT";
+        public static final String ACTION_ADD_NEW_REPORT_AZURE = "com.facticoapp.nuup.receiver.action.ADD_NEW_REPORT_AZURE";
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -182,7 +182,6 @@ public class MainFragment extends Fragment implements BluetoothBroadcastReceiver
                     Report report = (Report) GsonParser.getObjectFromJSON(result, Report.class);
 
                     if (report != null) {
-                        Dialogues.Log(TAG, "2 Report Result: " + result, Log.ERROR);
                         TraceDeviceService.startService(context, true);
                     } else {
                         hasError = true;

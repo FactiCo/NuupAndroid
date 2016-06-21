@@ -1,10 +1,14 @@
 package com.facticoapp.nuup.httpconnection;
 
 import android.util.Base64;
+import android.util.Log;
+
+import com.facticoapp.nuup.dialogues.Dialogues;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -76,10 +80,10 @@ public class HttpConnection {
             //urlConnection.setRequestProperty("Authorization", authorizationString);
 
             // Make some HTTP header nicety
-            urlConnection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+            urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setRequestProperty("Accept", "application/json");
-            urlConnection.setRequestProperty("Cache-Control", "no-cache");
-            urlConnection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+            //urlConnection.setRequestProperty("Cache-Control", "no-cache");
+            //urlConnection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
 
             urlConnection.connect();
 

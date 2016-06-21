@@ -9,15 +9,12 @@ import java.io.Serializable;
  */
 
 public class ReportAzure implements Serializable {
-    @Expose
     private long UserID;
-    @Expose
-    private String Device = "android";
-    @Expose
-    private String Token;
+    @Expose private String Device = "android";
+    @Expose private String Token;
 
     public ReportAzure(String Token) {
-        Token = Token;
+        this.Token = Token;
     }
 
     public long getId() {

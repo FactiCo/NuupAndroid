@@ -24,6 +24,7 @@ public class ConnectionsIntentService extends IntentService {
     private static final String ACTION_ADD_NEW_REPORT_AZURE = "com.facticoapp.nuup.services.action.ADD_NEW_REPORT_AZURE";
 
     private static final String EXTRA_REPORT = "com.facticoapp.nuup.services.extra.REPORT";
+    private static final String EXTRA_REPORT_AZURE = "com.facticoapp.nuup.services.extra.REPORT_AZURE";
     public static final String EXTRA_RESULT = "com.facticoapp.nuup.services.extra.RESULT";
 
     public ConnectionsIntentService() {
@@ -40,7 +41,7 @@ public class ConnectionsIntentService extends IntentService {
     public static void startActionAddNewReportAzure(Context context, ReportAzure report) {
         Intent intent = new Intent(context, ConnectionsIntentService.class);
         intent.setAction(ACTION_ADD_NEW_REPORT_AZURE);
-        intent.putExtra(EXTRA_REPORT, report);
+        intent.putExtra(EXTRA_REPORT_AZURE, report);
         context.startService(intent);
     }
 
@@ -53,7 +54,7 @@ public class ConnectionsIntentService extends IntentService {
                 Report report = (Report) intent.getSerializableExtra(EXTRA_REPORT);
                 handleActionAddNewReport(report);
             } else if (ACTION_ADD_NEW_REPORT_AZURE.equals(action)) {
-                ReportAzure report = (ReportAzure) intent.getSerializableExtra(EXTRA_REPORT);
+                ReportAzure report = (ReportAzure) intent.getSerializableExtra(EXTRA_REPORT_AZURE);
                 handleActionAddNewReportAzure(report);
             }
         }
@@ -77,9 +78,9 @@ public class ConnectionsIntentService extends IntentService {
 
         if (report != null) {
             String jsonToSend = GsonParser.createJsonFromObjectWithExposeAnnotations(report);
-            Dialogues.Log(TAG, "Report Azure json: " + jsonToSend, Log.ERROR);
-            result = HttpConnection.POST(HttpConnection.REPORTS_AZURE, jsonToSend);
-            Dialogues.Log(TAG, "Report Azure Result: " + result, Log.ERROR);
+            Dialogues.Log(TAG, "Register Azure json: " + jsonToSend, Log.ERROR);
+            result = HttpConnection.POST(HttpConnection.REGISTER_AZURE, jsonToSend);
+            Dialogues.Log(TAG, "Register Azure Result: " + result, Log.ERROR);
         }
 
         sendBroadcast(MainFragment.AddNewReportReceiver.ACTION_ADD_NEW_REPORT_AZURE, EXTRA_RESULT, result);
