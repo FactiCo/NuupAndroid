@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import com.facticoapp.nuup.R;
 import com.facticoapp.nuup.maps.MyGoogleMaps;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by zace3d on 6/21/16.
@@ -23,8 +23,12 @@ public class CompanionFragment extends Fragment {
     private SupportMapFragment mMapFragment;
     private MyGoogleMaps mGoogleMaps;
 
-    public static Fragment newInstance() {
-        return new CompanionFragment();
+    public static Fragment newInstance(String alert) {
+        Fragment fragment = new CompanionFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("alert", alert);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -63,7 +67,9 @@ public class CompanionFragment extends Fragment {
         if (mGoogleMaps.setUpMap()) {
             mGoogleMaps.initMap();
 
-            //mGoogleMaps.centerInCurrentLocation();
+            mGoogleMaps.setMyLocationEnabled(true);
+            mGoogleMaps.centerInCurrentLocation(new LatLng(20.988759, -86.828618), "User who need help", "Location", null);
+            mGoogleMaps.animateCamera(new LatLng(20.988759, -86.828618), true, 15, true);
         }
     }
 }

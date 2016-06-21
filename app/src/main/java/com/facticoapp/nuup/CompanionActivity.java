@@ -20,9 +20,11 @@ public class CompanionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_companion);
 
+        String alert = getIntent().getStringExtra("alert");
+
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            Fragment fragment = CompanionFragment.newInstance();
+            Fragment fragment = CompanionFragment.newInstance(alert);
             transaction.replace(R.id.map_container, fragment);
             transaction.commit();
         }

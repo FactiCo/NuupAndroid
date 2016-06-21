@@ -1,6 +1,9 @@
 package com.facticoapp.nuup.maps;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -96,6 +99,29 @@ public class MyGoogleMaps implements OnMapReadyCallback {
             map.moveCamera(CameraUpdateFactory.newLatLng(location));
     }
 
+    public void animateCamera(int position, boolean zoom, int zoomRatio, boolean showInfoWindow) {
+        if (markers != null && markers.size() > 0) {
+            Marker marker = markers.get(position);
+
+            if (showInfoWindow)
+                marker.showInfoWindow();
+            LatLng location = marker.getPosition();
+            if (zoom) {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, map.getMaxZoomLevel() - zoomRatio));
+            } else {
+                map.animateCamera(CameraUpdateFactory.newLatLng(location));
+            }
+        }
+    }
+
+    public void animateCamera(LatLng location, boolean zoom, int zoomRatio, boolean showInfoWindow) {
+        if (zoom) {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, map.getMaxZoomLevel() - zoomRatio));
+        } else {
+            map.animateCamera(CameraUpdateFactory.newLatLng(location));
+        }
+    }
+
     public Marker createMarker(GoogleMap map, LatLng point, String title, boolean draggable, String snippet, BitmapDescriptor icon) {
         return map.addMarker(new MarkerOptions()
                 .position(point)
@@ -113,6 +139,17 @@ public class MyGoogleMaps implements OnMapReadyCallback {
         this.map = map;
 
         setOnMapReady(map);
+    }
+
+    public void setMyLocationEnabled(boolean state) {
+        if (map != null) {
+            if (ActivityCompat.checkSelfPermission(context,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+
+            map.setMyLocationEnabled(state);
+        }
     }
 
     // OnMapReadyListener
