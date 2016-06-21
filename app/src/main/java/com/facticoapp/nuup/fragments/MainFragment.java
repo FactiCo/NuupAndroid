@@ -162,17 +162,20 @@ public class MainFragment extends Fragment implements BluetoothBroadcastReceiver
             String result = intent.getStringExtra(ConnectionsIntentService.EXTRA_RESULT);
 
             if (intent.getAction().equals(ACTION_ADD_NEW_REPORT)) {
-                boolean hasError = false;
                 if (result != null) {
                     Report report = (Report) GsonParser.getObjectFromJSON(result, Report.class);
 
+                    /*if (report != null) {
+                        TraceDeviceService.startService(context, true);
+                    }*/
+                }
+            } else if (intent.getAction().equals(ACTION_ADD_NEW_REPORT_AZURE)) {
+                if (result != null) {
+                    ReportAzure report = (ReportAzure) GsonParser.getObjectFromJSON(result, ReportAzure.class);
+
                     if (report != null) {
                         TraceDeviceService.startService(context, true);
-                    } else {
-                        hasError = true;
                     }
-                } else {
-                    hasError = true;
                 }
             }
         }

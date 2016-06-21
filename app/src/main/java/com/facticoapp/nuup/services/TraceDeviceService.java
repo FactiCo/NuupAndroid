@@ -11,7 +11,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.facticoapp.nuup.dialogues.Dialogues;
+import com.facticoapp.nuup.httpconnection.HttpConnection;
 import com.facticoapp.nuup.models.TraceAzure;
+import com.facticoapp.nuup.parser.GsonParser;
 import com.facticoapp.nuup.preferences.PreferencesManager;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -82,7 +84,9 @@ public class TraceDeviceService extends Service {
             super.handleMessage(msg);
             TraceAzure traceAzure = (TraceAzure) msg.obj;
 
-            Dialogues.Log(TAG, "Ruuun: ", Log.ERROR);
+            String json = GsonParser.createJsonFromObject(traceAzure);
+            //String result = HttpConnection.POST(HttpConnection.REPORTS_AZURE, json);
+            Dialogues.Log(TAG, "Ruuun: " + json, Log.ERROR);
         }
     };
 
