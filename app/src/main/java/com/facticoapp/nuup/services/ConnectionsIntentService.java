@@ -10,6 +10,7 @@ import com.facticoapp.nuup.dialogues.Dialogues;
 import com.facticoapp.nuup.fragments.MainFragment;
 import com.facticoapp.nuup.httpconnection.HttpConnection;
 import com.facticoapp.nuup.models.Report;
+import com.facticoapp.nuup.models.ReportAzure;
 import com.facticoapp.nuup.parser.GsonParser;
 
 /**
@@ -20,6 +21,7 @@ public class ConnectionsIntentService extends IntentService {
     public static final String TAG = ConnectionsIntentService.class.getName();
 
     private static final String ACTION_ADD_NEW_REPORT = "com.facticoapp.nuup.services.action.ADD_NEW_REPORT";
+    private static final String ACTION_ADD_NEW_REPORT_AZURE = "com.facticoapp.nuup.services.action.ADD_NEW_REPORT_AZURE";
 
     private static final String EXTRA_REPORT = "com.facticoapp.nuup.services.extra.REPORT";
     public static final String EXTRA_RESULT = "com.facticoapp.nuup.services.extra.RESULT";
@@ -35,6 +37,13 @@ public class ConnectionsIntentService extends IntentService {
         context.startService(intent);
     }
 
+    public static void startActionAddNewReportAzure(Context context, ReportAzure report) {
+        Intent intent = new Intent(context, ConnectionsIntentService.class);
+        intent.setAction(ACTION_ADD_NEW_REPORT_AZURE);
+        intent.putExtra(EXTRA_REPORT, report);
+        context.startService(intent);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         Dialogues.Log(TAG, "============Entré onHandleIntent", Log.ERROR);
@@ -43,6 +52,9 @@ public class ConnectionsIntentService extends IntentService {
             if (ACTION_ADD_NEW_REPORT.equals(action)) {
                 Report report = (Report) intent.getSerializableExtra(EXTRA_REPORT);
                 handleActionAddNewReport(report);
+            } else if (ACTION_ADD_NEW_REPORT_AZURE.equals(action)) {
+                ReportAzure report = (ReportAzure) intent.getSerializableExtra(EXTRA_REPORT);
+                handleActionAddNewReportAzure(report);
             }
         }
     }
@@ -57,7 +69,20 @@ public class ConnectionsIntentService extends IntentService {
             Dialogues.Log(TAG, "Report Result: " + result, Log.ERROR);
         }
 
-        sendBroadcast(MainFragment.AddNewReportReceiver.ACTION_ADD_NEW_REPORT, EXTRA_RESULT,  result);
+        sendBroadcast(MainFragment.AddNewReportReceiver.ACTION_ADD_NEW_REPORT, EXTRA_RESULT, result);
+    }
+
+    private void handleActionAddNewReportAzure(ReportAzure report) {
+        String result = null;
+
+        if (report != null) {
+            String jsonToSend = GsonParser.createJsonFromObjectWithExposeAnnotations(report);
+            Dialogues.Log(TAG, "Report Azure json: " + jsonToSend, Log.ERROR);
+            result = HttpConnection.POST(HttpConnection.REPORTS_AZURE, jsonToSend);
+            Dialogues.Log(TAG, "Report Azure Result: " + result, Log.ERROR);
+        }
+
+        sendBroadcast(MainFragment.AddNewReportReceiver.ACTION_ADD_NEW_REPORT_AZURE, EXTRA_RESULT, result);
     }
 
     private void sendBroadcast(String action, String name, String value) {

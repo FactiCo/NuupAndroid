@@ -46,6 +46,7 @@ public class RegistrationIntentService extends IntentService {
             // Subscribe to topic channels
             subscribeTopics(token);
 
+            PreferencesManager.putString(getApplication(), PreferencesManager.TOKEN, token);
             PreferencesManager.putBoolean(getApplication(), PreferencesManager.SENT_TOKEN_TO_SERVER, true);
             // [END register_for_gcm]
         } catch (Exception e) {

@@ -7,9 +7,11 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +25,11 @@ import com.facticoapp.nuup.bluetooth.BluetoothA2DPRequester;
 import com.facticoapp.nuup.bluetooth.BluetoothBroadcastReceiver;
 import com.facticoapp.nuup.dialogues.Dialogues;
 import com.facticoapp.nuup.models.Report;
+import com.facticoapp.nuup.models.ReportAzure;
 import com.facticoapp.nuup.parser.GsonParser;
 import com.facticoapp.nuup.preferences.PreferencesManager;
 import com.facticoapp.nuup.services.ConnectionsIntentService;
+import com.facticoapp.nuup.services.TraceDeviceService;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.lang.reflect.InvocationTargetException;
@@ -46,6 +50,8 @@ public class MainFragment extends Fragment implements BluetoothBroadcastReceiver
     private BluetoothAdapter mBluetoothAdapter;
 
     private String mConnectedDeviceAddress;
+
+    private AddNewReportReceiver mAddReportReceiver = new AddNewReportReceiver();
 
     public static Fragment newInstance() {
         return new MainFragment();
@@ -76,20 +82,7 @@ public class MainFragment extends Fragment implements BluetoothBroadcastReceiver
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mScanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //DeviceScanActivity.startActivityForResult(MainFragment.this, REQUEST_CONNECT_DEVICE_SECURE);
-
-                long deviceId = PreferencesManager.getLong(getActivity().getApplication(), PreferencesManager.DEVICE_ID);
-                Dialogues.Log(TAG, String.valueOf(deviceId), Log.ERROR);
-                if (deviceId != -1) {
-                    LatLng location = PreferencesManager.getLocationPreference(getActivity().getApplication());
-                    Report report = new Report(deviceId, location);
-                    ConnectionsIntentService.startActionAddNewReport(getActivity(), report);
-                }
-            }
-        });
+        mScanButton.setOnClickListener(mReportOnClickListener);
 
         // If the adapter is null, then Bluetooth is not supported
         if (mBluetoothAdapter == null) {
@@ -100,6 +93,13 @@ public class MainFragment extends Fragment implements BluetoothBroadcastReceiver
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        registerAddNewReportReceiver();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
@@ -107,6 +107,21 @@ public class MainFragment extends Fragment implements BluetoothBroadcastReceiver
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mAddReportReceiver != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mAddReportReceiver);
+        }
+    }
+
+    private void registerAddNewReportReceiver() {
+        IntentFilter filter = new IntentFilter(AddNewReportReceiver.ACTION_ADD_NEW_REPORT);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mAddReportReceiver, filter);
     }
 
     @Override
@@ -131,24 +146,50 @@ public class MainFragment extends Fragment implements BluetoothBroadcastReceiver
         }
     }
 
+    private View.OnClickListener mReportOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //DeviceScanActivity.startActivityForResult(MainFragment.this, REQUEST_CONNECT_DEVICE_SECURE);
+
+            long deviceId = PreferencesManager.getLong(getActivity().getApplication(), PreferencesManager.DEVICE_ID);
+            Dialogues.Log(TAG, String.valueOf(deviceId), Log.ERROR);
+            if (deviceId != -1) {
+                LatLng location = PreferencesManager.getLocationPreference(getActivity().getApplication());
+                Report report = new Report(deviceId, location);
+                ConnectionsIntentService.startActionAddNewReport(getActivity(), report);
+            }
+
+            String token = PreferencesManager.getString(getActivity().getApplication(), PreferencesManager.TOKEN);
+            Dialogues.Log(TAG, "Token: " + token, Log.ERROR);
+            if (token != null) {
+                ReportAzure report = new ReportAzure(token);
+                ConnectionsIntentService.startActionAddNewReportAzure(getActivity(), report);
+            }
+        }
+    };
+
     public class AddNewReportReceiver extends BroadcastReceiver {
         public static final String ACTION_ADD_NEW_REPORT = "com.facticoapp.supercivicos.receiver.action.SEND_LIKE_TO_ITEM";
+        public static final String ACTION_ADD_NEW_REPORT_AZURE = "com.facticoapp.supercivicos.receiver.action.SEND_LIKE_TO_ITEM";
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String result = intent.getStringExtra(ConnectionsIntentService.EXTRA_RESULT);
 
-            boolean hasError = false;
-            if (result != null) {
-                Report report = (Report) GsonParser.getObjectFromJSON(result, Report.class);
+            if (intent.getAction().equals(ACTION_ADD_NEW_REPORT)) {
+                boolean hasError = false;
+                if (result != null) {
+                    Report report = (Report) GsonParser.getObjectFromJSON(result, Report.class);
 
-                if (report != null) {
-                    Dialogues.Log(TAG, "Report Result: " + result, Log.ERROR);
+                    if (report != null) {
+                        Dialogues.Log(TAG, "2 Report Result: " + result, Log.ERROR);
+                        TraceDeviceService.startService(context, true);
+                    } else {
+                        hasError = true;
+                    }
                 } else {
                     hasError = true;
                 }
-            } else {
-                hasError = true;
             }
         }
     }

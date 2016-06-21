@@ -18,6 +18,10 @@ public class PreferencesManager {
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
 
+    public static final String TOKEN = "token";
+
+    public static final String USER_ID_AZURE = "user_id_azure";
+
     public static final String DEVICE_ID = "device_id";
 
     public static void putLocationPreference(Context context, String latitude, String longitude) {

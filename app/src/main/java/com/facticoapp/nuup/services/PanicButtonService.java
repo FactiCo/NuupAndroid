@@ -68,9 +68,9 @@ public class PanicButtonService extends Service {
         mMediaSession = mManager.getActiveSessions();*/
         mMediaSession = new MediaSession(getApplicationContext(), TAG);
 
-        Intent intent = new Intent("com.facticoapp.PANIC_BUTTON");
-        PendingIntent pendingSwitchIntent = PendingIntent.getBroadcast(this, 100, intent, 0);
-        mMediaSession.setMediaButtonReceiver(pendingSwitchIntent);
+        //Intent intent = new Intent("com.facticoapp.PANIC_BUTTON");
+        //PendingIntent pendingSwitchIntent = PendingIntent.getBroadcast(this, 100, intent, 0);
+        //mMediaSession.setMediaButtonReceiver(pendingSwitchIntent);
         mMediaSession.setCallback(new MediaSession.Callback() {
             @Override
             public boolean onMediaButtonEvent(@NonNull Intent mediaButtonIntent) {
@@ -78,15 +78,6 @@ public class PanicButtonService extends Service {
 
                 Dialogues.Log(TAG, keyEvent + " onMediaButtonEvent called: " + mediaButtonIntent, Log.DEBUG);
                 return false;
-            }
-
-            @Override
-            public void onCustomAction(String action, Bundle extras) {
-                super.onCustomAction(action, extras);
-
-                String ac = extras.getString(action);
-
-                Dialogues.Log(TAG, " onCustomAction called: " + ac, Log.DEBUG);
             }
 
             @Override

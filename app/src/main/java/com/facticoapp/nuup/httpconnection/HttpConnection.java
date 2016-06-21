@@ -22,6 +22,11 @@ public class HttpConnection {
 
     private static final String BASE_URL = "http://104.210.150.140/";
 
+    private static final String AZURE_URL = "http://nuup.azurewebsites.net/api/";
+
+    public static final String REGISTER_AZURE = "Register";
+    public static final String REPORTS_AZURE = "Report";
+
     public static final String DEVICES = "devices.json";
     public static final String REPORTS = "reports.json";
 
@@ -156,6 +161,9 @@ public class HttpConnection {
     }
 
     private static String getAbsoluteUrl(String relativeUrl) {
+        if (relativeUrl.equals(REGISTER_AZURE) || relativeUrl.equals(REPORTS_AZURE))
+            return AZURE_URL + relativeUrl;
+
         return BASE_URL + relativeUrl;
     }
 
