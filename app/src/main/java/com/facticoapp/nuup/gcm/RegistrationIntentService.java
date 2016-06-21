@@ -2,15 +2,20 @@ package com.facticoapp.nuup.gcm;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.location.Location;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.facticoapp.nuup.R;
 import com.facticoapp.nuup.dialogues.Dialogues;
+import com.facticoapp.nuup.httpconnection.HttpConnection;
+import com.facticoapp.nuup.models.Device;
+import com.facticoapp.nuup.parser.GsonParser;
 import com.facticoapp.nuup.preferences.PreferencesManager;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 
@@ -72,7 +77,10 @@ public class RegistrationIntentService extends IntentService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        // Add custom implementation, as needed.
+        LatLng location = PreferencesManager.getLocationPreference(getApplication());
+        Device device = new Device(token, location);
+        String json = GsonParser.createJsonFromObject(device);
+        HttpConnection.POST(HttpConnection.DEVICES, json);
     }
 
     /**
@@ -89,5 +97,4 @@ public class RegistrationIntentService extends IntentService {
         }
     }
     // [END subscribe_topics]
-
 }
