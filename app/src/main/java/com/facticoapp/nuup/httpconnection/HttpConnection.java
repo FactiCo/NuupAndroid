@@ -63,8 +63,7 @@ public class HttpConnection {
             urlConnection.setDoInput(true);
             urlConnection.setDoOutput(true);
             urlConnection.setUseCaches(false);
-            urlConnection.setChunkedStreamingMode(1024);
-            // urlConnection.setFixedLengthStreamingMode(json.getBytes().length);
+            urlConnection.setFixedLengthStreamingMode(json.getBytes().length);
 
             // Authorization
             //String authorizationString = getB64Auth(USER, PWD);
@@ -78,19 +77,11 @@ public class HttpConnection {
 
             urlConnection.connect();
 
-            OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
-            char[] buffer = new char[1024];
-            int bufferLength = 0;
-            StringReader stringReader = new StringReader(json);
-            while ((bufferLength = stringReader.read(buffer)) > 0) {
-                writer.write(buffer, 0, bufferLength);
-            }
-            writer.flush();
-
-            //OutputStream os = new BufferedOutputStream(urlConnection.getOutputStream());
-            //os.write(json.getBytes());
+            //setup send
+            OutputStream os = new BufferedOutputStream(urlConnection.getOutputStream());
+            os.write(json.getBytes());
             //clean up
-            //os.flush();
+            os.flush();
 
             if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK ||
                     urlConnection.getResponseCode() == HttpURLConnection.HTTP_CREATED ||
